@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alan — Software Developer</title>
+<meta name="description" content="Portfolio of Alan — iOS &amp; software developer based in the Netherlands.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Palette derived from Xcode's dark theme */
+    --bg: #1d1d22;
+    --panel: #26262c;
+    --panel-2: #2d2d34;
+    --line: #3a3a42;
+    --text: #e3e3e6;
+    --muted: #8b8b96;
+    --comment: #6c7986;
+    --pink: #fc5fa3;     /* keywords */
+    --cyan: #5dd8ff;     /* types */
+    --mint: #67e7c1;     /* success / strings */
+    --orange: #fd8f3f;   /* numbers */
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--pink); color: #1d1d22; }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(29, 29, 34, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 500;
+    color: var(--text);
+  }
+  .brand .tilde { color: var(--pink); }
+  .nav-links { display: flex; gap: 4px; list-style: none; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--panel-2); text-decoration: none; }
+
+  /* ---------- Hero ---------- */
+  header { padding: 88px 0 72px; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--comment);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  h1 .accent { color: var(--pink); }
+  .lede { max-width: 560px; color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 820px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Code window (signature element) ---------- */
+  .code-window {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+  .code-titlebar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    margin-left: auto; margin-right: auto;
+  }
+  .code-body {
+    padding: 20px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+    min-height: 280px;
+  }
+  .kw { color: var(--pink); }
+  .ty { color: var(--cyan); }
+  .st { color: #fc6a5d; }
+  .nu { color: var(--orange); }
+  .cm { color: var(--comment); }
+  .fn { color: #a167e6; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--cyan);
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 500;
+    padding: 11px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--pink); color: #1d1d22; }
+  .btn-primary:hover { background: #ff7ab5; text-decoration: none; }
+  .btn-ghost { border-color: var(--line); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--comment);
+    margin-bottom: 10px;
+  }
+  .section-label::before { content: '// '; }
+  h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; }
+  @media (max-width: 720px) { .about-grid { grid-template-columns: 1fr; } }
+  .about-grid p { color: var(--muted); margin-bottom: 16px; max-width: 60ch; }
+  .about-grid p strong { color: var(--text); font-weight: 600; }
+  .fact-list { list-style: none; }
+  .fact-list li {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--muted);
+  }
+  .fact-list li span { color: var(--mint); }
+
+  /* Projects */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--pink); }
+  .card-top {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .card-lang { color: var(--cyan); }
+  .card-lang::before { content: '● '; font-size: 10px; }
+  .card-status { color: var(--comment); }
+  .card h3 { font-family: 'Archivo', sans-serif; font-size: 1.15rem; font-weight: 700; }
+  .card p { color: var(--muted); font-size: 0.95rem; flex-grow: 1; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--mint);
+    background: rgba(103, 231, 193, 0.08);
+    border: 1px solid rgba(103, 231, 193, 0.25);
+    padding: 3px 9px;
+    border-radius: 99px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+  }
+  .skill-group {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .skill-group h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 500;
+    color: var(--pink);
+    margin-bottom: 14px;
+  }
+  .skill-group ul { list-style: none; }
+  .skill-group li {
+    font-size: 0.95rem;
+    color: var(--muted);
+    padding: 5px 0;
+  }
+  .skill-group li::before { content: '▸ '; color: var(--cyan); }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; }
+  @media (max-width: 760px) { .contact-grid { grid-template-columns: 1fr; } }
+  .contact-grid > div > p { color: var(--muted); max-width: 50ch; margin-bottom: 20px; }
+  .contact-links { list-style: none; }
+  .contact-links li { padding: 6px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  .contact-links .lbl { color: var(--comment); }
+
+  form { display: flex; flex-direction: column; gap: 14px; }
+  label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+  input, textarea {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+  }
+  input:focus, textarea:focus { border-color: var(--cyan); outline: none; }
+  textarea { resize: vertical; min-height: 130px; }
+  .form-note { font-size: 13px; color: var(--comment); }
+
+  /* Footer / status bar */
+  footer {
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .statusbar {
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    height: auto; min-height: 40px;
+    padding: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--comment);
+  }
+  .statusbar .ok { color: var(--mint); }
+  .statusbar .right { margin-left: auto; }
+
+  /* ---------- Effects ---------- */
+
+  /* Scroll progress bar */
+  #progress {
+    position: fixed; top: 0; left: 0; z-index: 100;
+    height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--pink), var(--cyan));
+    box-shadow: 0 0 12px rgba(252, 95, 163, 0.6);
+  }
+
+  /* Hero ambient: faint grid + drifting glow blobs */
+  header { position: relative; }
+  .hero-bg {
+    position: absolute; inset: -56px 0 0 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 0%, transparent 75%);
+    opacity: 0.35;
+  }
+  .blob {
+    position: absolute;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    filter: blur(110px);
+    opacity: 0.16;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .blob.pink { background: var(--pink); top: -120px; left: -100px; animation: drift1 18s ease-in-out infinite alternate; }
+  .blob.cyan { background: var(--cyan); top: 120px; right: -140px; animation: drift2 22s ease-in-out infinite alternate; }
+  @keyframes drift1 { from { transform: translate(0, 0); } to { transform: translate(80px, 60px); } }
+  @keyframes drift2 { from { transform: translate(0, 0); } to { transform: translate(-70px, -50px); } }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  /* Card spotlight that follows the cursor */
+  .card { position: relative; overflow: hidden; }
+  .card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(93, 216, 255, 0.10), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .card:hover::before { opacity: 1; }
+  .card > * { position: relative; z-index: 1; }
+
+  /* Button shine sweep */
+  .btn { position: relative; overflow: hidden; }
+  .btn-primary::after {
+    content: '';
+    position: absolute; top: 0; left: -80%;
+    width: 50%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.45s ease;
+  }
+  .btn-primary:hover::after { left: 130%; }
+
+  /* Nav: highlight the section currently in view */
+  .nav-links a.active { color: var(--cyan); background: var(--panel-2); }
+
+  /* Code window: subtle glow + tilt response */
+  .code-window {
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    will-change: transform;
+  }
+  .code-window:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 40px rgba(252, 95, 163, 0.08); }
+
+  /* Skill list items slide on hover */
+  .skill-group li { transition: transform 0.18s ease, color 0.18s ease; }
+  .skill-group li:hover { transform: translateX(6px); color: var(--text); }
+
+  /* ---------- Git-style scroll timeline ---------- */
+  #timeline {
+    position: fixed;
+    left: 32px; top: 84px; bottom: 56px;
+    width: 2px;
+    z-index: 40;
+  }
+  .tl-track {
+    position: absolute; inset: 0;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  .tl-fill {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 0%;
+    background: linear-gradient(180deg, var(--pink), var(--cyan));
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(93, 216, 255, 0.5);
+  }
+  .tl-dot {
+    position: absolute; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 11px; height: 11px;
+    padding: 0;
+    appearance: none;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    cursor: pointer;
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .tl-dot.lit {
+    border-color: var(--cyan);
+    background: var(--cyan);
+    box-shadow: 0 0 12px rgba(93, 216, 255, 0.7);
+  }
+  .tl-label {
+    position: absolute; left: 22px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .tl-label .hash { color: var(--orange); }
+  .tl-dot:hover .tl-label, .tl-dot:focus-visible .tl-label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(4px);
+  }
+  /* HEAD marker rides the tip of the fill */
+  .tl-head {
+    position: absolute; left: 50%; top: 0%;
+    transform: translate(-50%, -50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    color: #1d1d22;
+    background: var(--cyan);
+    border-radius: 4px;
+    padding: 1px 5px;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 10px rgba(93, 216, 255, 0.6);
+    pointer-events: none;
+  }
+  @media (max-width: 1200px) {
+    #timeline { left: 14px; }
+    .tl-label { font-size: 11px; }
+  }
+  @media (max-width: 640px) { #timeline { display: none; } }
+  @media (prefers-reduced-motion: reduce) { #timeline { display: none; } }
+
+  /* ---------- Floating code glyph field ---------- */
+  #glyphs {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="glyphs" aria-hidden="true"></canvas>
+
+<div id="progress" aria-hidden="true"></div>
+
+<div id="timeline" aria-hidden="true">
+  <div class="tl-track"></div>
+  <div class="tl-fill"></div>
+  <div class="tl-head">HEAD</div>
+</div>
+
+<nav>
+  <div class="wrap nav-inner">
+    <span class="brand"><span class="tilde">~/</span>alan</span>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="blob pink" aria-hidden="true"></div>
+  <div class="blob cyan" aria-hidden="true"></div>
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">// software developer · netherlands</p>
+      <h1>I build apps for<br>screens <span class="accent">&amp; beyond</span>.</h1>
+      <p class="lede">Student developer working in iOS and exploring what comes after the phone — from production apps to experiments on smart glasses.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#projects">View projects</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="code-window" aria-label="Decorative code snippet">
+      <div class="code-titlebar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="code-filename">Developer.swift</span>
+      </div>
+      <div class="code-body" id="codeBody"></div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <p class="section-label">about</p>
+    <h2>About me</h2>
+    <div class="about-grid">
+      <div>
+        <p>I'm a <strong>student software developer</strong> based in the Netherlands. I started with an internship building production iOS software, and liked it enough that they asked me back — so now I split my time between studying and shipping real features used by real people.</p>
+        <p>Lately I've been most excited about <strong>emerging hardware</strong>: I've been prototyping voice-driven experiences for smart glasses, digging into Bluetooth audio sessions, speech-to-text pipelines, and how apps should behave when there's no screen to tap.</p>
+        <p>I care about code that's easy to read six months later, and products that feel obvious to use on the first try.</p>
+      </div>
+      <ul class="fact-list">
+        <li>location: <span>"Netherlands"</span></li>
+        <li>role: <span>"Student / iOS dev"</span></li>
+        <li>focus: <span>"Mobile + wearables"</span></li>
+        <li>status: <span>.openToOpportunities</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <p class="section-label">projects</p>
+    <h2>Selected work</h2>
+    <div class="project-grid">
+
+      <article class="card">
+        <div class="card-top"><span class="card-lang">Swift</span><span class="card-status">production</span></div>
+        <h3>iOS app development</h3>
+        <p>Contributing to a large production iOS codebase as part of a development team — building features, fixing bugs, and learning how real-world apps are architected, signed, and shipped to the App Store.</p>
+        <div class="tag-row">
+          <span class="tag">Swift</span><span class="tag">Xcode</span><span class="tag">Git</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="card-lang">Swift</span><span class="card-status">prototype</span></div>
+        <h3>Smart glasses voice assistant</h3>
+        <p>An experimental voice-first app for Ray-Ban Meta smart glasses: capturing mic audio over Bluetooth, running speech-to-text, and routing commands through an LLM to trigger actions — all without a screen.</p>
+        <div class="tag-row">
+          <span class="tag">AVAudioSession</span><span class="tag">STT</span><span class="tag">LLM</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="card-lang">Your stack</span><span class="card-status">add yours</span></div>
+        <h3>Your next project</h3>
+        <p>Placeholder card — duplicate this block and describe another project here. A short, concrete sentence about what it does and what was hard about it works better than a feature list.</p>
+        <div class="tag-row">
+          <span class="tag">Tag</span><span class="tag">Tag</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <p class="section-label">skills</p>
+    <h2>Tech stack</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>languages</h3>
+        <ul>
+          <li>Swift</li>
+          <li>Python</li>
+          <li>JavaScript / TypeScript</li>
+          <li>SQL</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>frameworks &amp; platforms</h3>
+        <ul>
+          <li>iOS / UIKit / SwiftUI</li>
+          <li>AVFoundation &amp; audio sessions</li>
+          <li>REST APIs</li>
+          <li>Wearables (Ray-Ban Meta)</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>tools</h3>
+        <ul>
+          <li>Xcode &amp; code signing</li>
+          <li>Git / GitHub</li>
+          <li>CI &amp; App Store delivery</li>
+          <li>VS Code</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <p class="section-label">contact</p>
+    <h2>Let's talk</h2>
+    <div class="contact-grid">
+      <div>
+        <p>Open to internships, student jobs, and interesting side projects. The form opens your mail app with everything pre-filled — or reach me directly:</p>
+        <ul class="contact-links">
+          <li><span class="lbl">email:</span> <a href="mailto:you@example.com">you@example.com</a></li>
+          <li><span class="lbl">github:</span> <a href="https://github.com/yourusername">github.com/yourusername</a></li>
+          <li><span class="lbl">linkedin:</span> <a href="https://linkedin.com/in/yourusername">/in/yourusername</a></li>
+        </ul>
+      </div>
+      <div>
+        <form id="contactForm">
+          <div>
+            <label for="name">name</label>
+            <input id="name" name="name" type="text" required autocomplete="name">
+          </div>
+          <div>
+            <label for="email">email</label>
+            <input id="email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div>
+            <label for="message">message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-note">Opens your email client — no data is stored on this page.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap statusbar">
+    <span class="ok">● ready</span>
+    <span>main*</span>
+    <span>UTF-8</span>
+    <span>Swift 6</span>
+    <span class="right">© <span id="year"></span> Alan — built by hand, no template</span>
+  </div>
+</footer>
+
+<script>
+  // ---- Typed hero code (with reduced-motion fallback) ----
+  const codeHTML =
+'<span class="cm">// Developer.swift</span>\n' +
+'\n' +
+'<span class="kw">struct</span> <span class="ty">Developer</span> {\n' +
+'  <span class="kw">let</span> name     = <span class="st">"Alan"</span>\n' +
+'  <span class="kw">let</span> base     = <span class="st">"Netherlands 🇳🇱"</span>\n' +
+'  <span class="kw">let</span> focus    = [<span class="st">"iOS"</span>, <span class="st">"wearables"</span>]\n' +
+'  <span class="kw">var</span> learning = <span class="kw">true</span>\n' +
+'\n' +
+'  <span class="kw">func</span> <span class="fn">build</span>() -&gt; <span class="ty">Product</span> {\n' +
+'    <span class="kw">return</span> .somethingUseful\n' +
+'  }\n' +
+'}';
+
+  const codeBody = document.getElementById('codeBody');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReduced) {
+    codeBody.innerHTML = codeHTML;
+  } else {
+    // Type out character-by-character while preserving HTML tags
+    let i = 0, out = '';
+    const cursor = '<span class="cursor"></span>';
+    function type() {
+      if (i >= codeHTML.length) { codeBody.innerHTML = out + cursor; return; }
+      if (codeHTML[i] === '<') {
+        const close = codeHTML.indexOf('>', i);
+        out += codeHTML.slice(i, close + 1);
+        i = close + 1;
+        type();
+        return;
+      }
+      out += codeHTML[i];
+      i++;
+      codeBody.innerHTML = out + cursor;
+      setTimeout(type, codeHTML[i - 1] === '\n' ? 40 : 14);
+    }
+    type();
+  }
+
+  // ---- Contact form -> mailto ----
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = encodeURIComponent(document.getElementById('name').value);
+    const email = encodeURIComponent(document.getElementById('email').value);
+    const msg = encodeURIComponent(document.getElementById('message').value);
+    const subject = encodeURIComponent('Portfolio contact from ' + decodeURIComponent(name));
+    const body = msg + '%0A%0A—%0AFrom: ' + name + ' (' + email + ')';
+    window.location.href = 'mailto:you@example.com?subject=' + subject + '&body=' + body;
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---- Effects (all skipped if the visitor prefers reduced motion) ----
+  if (!prefersReduced) {
+
+    // Scroll progress bar
+    const progress = document.getElementById('progress');
+    window.addEventListener('scroll', () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    }, { passive: true });
+
+    // Scroll reveal with stagger for grid children
+    document.querySelectorAll('section h2, .about-grid > *, .card, .skill-group, .contact-grid > *')
+      .forEach(el => el.classList.add('reveal'));
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const siblings = [...el.parentElement.children].filter(c => c.classList.contains('reveal'));
+          el.style.transitionDelay = (siblings.indexOf(el) * 90) + 'ms';
+          el.classList.add('visible');
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Card spotlight follows the cursor
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+
+    // Gentle 3D tilt on the hero code window
+    const win = document.querySelector('.code-window');
+    win.addEventListener('mousemove', e => {
+      const r = win.getBoundingClientRect();
+      const rx = ((e.clientY - r.top) / r.height - 0.5) * -5;
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 5;
+      win.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+    });
+    win.addEventListener('mouseleave', () => { win.style.transform = ''; });
+
+    // Nav: highlight section in view
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section[id]');
+    const navObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a =>
+            a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => navObserver.observe(s));
+
+    // Git-style scroll timeline
+    const timeline = document.getElementById('timeline');
+    const tlFill = timeline.querySelector('.tl-fill');
+    const tlHead = timeline.querySelector('.tl-head');
+    const commits = [
+      { id: null,       hash: 'e1a4f02', msg: 'init' },
+      { id: 'about',    hash: 'b7c3d91', msg: 'feat: about' },
+      { id: 'projects', hash: '4f8ae26', msg: 'feat: projects' },
+      { id: 'skills',   hash: 'c2d9b54', msg: 'feat: skills' },
+      { id: 'contact',  hash: '9a1fe73', msg: 'feat: contact' }
+    ];
+    const dots = [];
+
+    commits.forEach(c => {
+      const dot = document.createElement('button');
+      dot.className = 'tl-dot';
+      dot.setAttribute('aria-label', 'Jump to ' + c.msg);
+      const label = document.createElement('span');
+      label.className = 'tl-label';
+      label.innerHTML = '<span class="hash">' + c.hash + '</span> ' + c.msg;
+      dot.appendChild(label);
+      dot.addEventListener('click', () => {
+        if (c.id) document.getElementById(c.id).scrollIntoView({ behavior: 'smooth' });
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      timeline.appendChild(dot);
+      dots.push({ el: dot, sectionId: c.id, frac: 0 });
+    });
+
+    function layoutTimeline() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      dots.forEach(d => {
+        const top = d.sectionId ? document.getElementById(d.sectionId).offsetTop - 120 : 0;
+        d.frac = max > 0 ? Math.min(Math.max(top / max, 0), 1) : 0;
+        d.el.style.top = (d.frac * 100) + '%';
+      });
+    }
+
+    function updateTimeline() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      tlFill.style.height = (p * 100) + '%';
+      tlHead.style.top = (p * 100) + '%';
+      dots.forEach(d => d.el.classList.toggle('lit', p >= d.frac - 0.001));
+    }
+
+    layoutTimeline();
+    updateTimeline();
+    window.addEventListener('scroll', updateTimeline, { passive: true });
+    window.addEventListener('resize', () => { layoutTimeline(); updateTimeline(); });
+    // Re-layout once fonts/typing settle the page height
+    setTimeout(() => { layoutTimeline(); updateTimeline(); }, 1500);
+
+    // Floating code glyph field
+    const canvas = document.getElementById('glyphs');
+    const ctx = canvas.getContext('2d');
+    const GLYPHS = ['{', '}', ';', '=>', '()', '[]', '</>', 'let', 'var', '!=', '&&', '://'];
+    let particles = [];
+    let dpr = 1;
+
+    function buildParticles() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.scale(dpr, dpr);
+      // ~1 glyph per 24k px², capped so big screens stay sparse
+      const count = Math.min(Math.round((window.innerWidth * window.innerHeight) / 24000), 50);
+      particles = Array.from({ length: count }, () => ({
+        glyph: GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: 13 + Math.random() * 13,
+        speed: 0.12 + Math.random() * 0.3,
+        swayAmp: 8 + Math.random() * 14,
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.002 + Math.random() * 0.003,
+        alpha: 0.10 + Math.random() * 0.14
+      }));
+    }
+
+    let rafId = null;
+    function drawGlyphs(t) {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      for (const p of particles) {
+        p.y -= p.speed;
+        if (p.y < -30) {
+          p.y = window.innerHeight + 30;
+          p.x = Math.random() * window.innerWidth;
+          p.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+        const x = p.x + Math.sin(t * p.swaySpeed + p.swayPhase) * p.swayAmp;
+        ctx.font = p.size + "px 'JetBrains Mono', monospace";
+        ctx.fillStyle = 'rgba(130, 148, 168, ' + p.alpha + ')';
+        ctx.fillText(p.glyph, x, p.y);
+      }
+      rafId = requestAnimationFrame(drawGlyphs);
+    }
+
+    buildParticles();
+    rafId = requestAnimationFrame(drawGlyphs);
+
+    // Pause when the tab is hidden, save batteries
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { cancelAnimationFrame(rafId); rafId = null; }
+      else if (!rafId) rafId = requestAnimationFrame(drawGlyphs);
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        buildParticles();
+      }, 150);
+    });
+  }
+</script>
+
+</body>
+</html>
